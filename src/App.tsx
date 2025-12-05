@@ -42,6 +42,38 @@ const glowStyles = `
   .homecard-glow {
     animation: homeCardGlow 3.5s ease-in-out infinite;
   }
+
+  @keyframes headerGlow {
+    0% {
+      text-shadow: 0 0 8px rgba(34, 197, 94, 0.8), 0 0 16px rgba(56, 189, 248, 0.6);
+      filter: hue-rotate(0deg);
+    }
+    50% {
+      text-shadow: 0 0 14px rgba(248, 250, 252, 0.9), 0 0 26px rgba(236, 72, 153, 0.8);
+      filter: hue-rotate(40deg);
+    }
+    100% {
+      text-shadow: 0 0 8px rgba(34, 197, 94, 0.8), 0 0 16px rgba(56, 189, 248, 0.6);
+      filter: hue-rotate(0deg);
+    }
+  }
+
+  .header-glow {
+    animation: headerGlow 4s ease-in-out infinite;
+  }
+
+  @keyframes marqueeSlide {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .marquee-notice {
+    animation: marqueeSlide 14s linear infinite;
+  }
 `;
 
 function App() {
@@ -205,7 +237,13 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#1f2933] pt-16 pb-4">
+    <div
+      className="min-h-screen pt-16 pb-4 bg-[#020617] bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage:
+          "url('https://i.ibb.co.com/jvcsJnG9/33114809-rm251-mind-15-e.jpg')",
+      }}
+    >
       <style>{glowStyles}</style>
 
       {/* Fixed Header Bar */}
@@ -217,7 +255,7 @@ function App() {
               alt="MOZAMMEL MCFB logo"
               className="w-7 h-7 rounded-xl shadow-sm"
             />
-            <h1 className="text-lg font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-emerald-100 to-emerald-400 drop-shadow-sm">
+            <h1 className="text-lg font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-sky-300 to-pink-400 drop-shadow-sm header-glow">
               MOZAMMEL MCFB
             </h1>
           </div>
@@ -225,10 +263,21 @@ function App() {
       </div>
 
       <div className="w-full max-w-md mx-auto px-3 relative">
-        <div className="bg-slate-900/95 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden border border-slate-700 min-h-[calc(100vh-5rem)] pb-20 flex flex-col">
+        <div className="bg-slate-900/75 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden border border-slate-600/80 min-h-[calc(100vh-5rem)] pb-20 flex flex-col">
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto">
+
+        {/* Notice Marquee */}
+        <div className="px-5 pt-3">
+          <div className="bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 rounded-full border border-amber-500/70 shadow-sm overflow-hidden">
+            <div className="flex items-center gap-2 px-4 py-1.5 text-[11px] font-medium text-amber-950 whitespace-nowrap marquee-notice">
+              <span className="uppercase tracking-wide text-[10px] bg-amber-600 text-amber-50 px-2 py-0.5 rounded-full">Notice</span>
+              <span>Upcoming tournaments and match signals are demo only. Always check latest updates in the signal channel before placing real bets.</span>
+              <span className="ml-6">Enjoy secure deposits with bKash, Nagad &amp; USDT · Withdraw fast · Play responsibly.</span>
+            </div>
+          </div>
+        </div>
 
         {/* Green Profile Section */}
         {activeTab !== 'home' && activeTab !== 'activity' && (
@@ -305,22 +354,13 @@ function App() {
         {/* Menu Items */}
         {activeTab === 'home' && (
           <div className="px-5 mt-6 space-y-5">
-            {/* Promotional Hero Card */}
-            <div className="bg-gradient-to-br from-emerald-500 via-emerald-400 to-emerald-600 rounded-3xl p-6 shadow-md border border-emerald-100 text-white custom-glow-card homecard-glow">
-              <h2 className="text-xl font-semibold mb-2">Welcome to MCFB</h2>
-              <p className="text-sm text-emerald-50 mb-4">
-                Play tournaments, earn rewards and withdraw instantly with bKash, Nagad or USDT.
-              </p>
-              <div className="flex items-center justify-between text-sm">
-                <div>
-                  <div className="font-semibold">Daily Bonus</div>
-                  <div className="text-emerald-50 text-[13px]">Login every day to unlock extra income.</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-[11px] uppercase tracking-wide opacity-80">Active Users</div>
-                  <div className="text-base font-semibold">120k+</div>
-                </div>
-              </div>
+            {/* Home Banner Image */}
+            <div className="rounded-3xl overflow-hidden shadow-md border border-emerald-500/40 custom-glow-card homecard-glow">
+              <img
+                src="https://i.ibb.co.com/pBz4m4SB/Green-Passive-Income-Ideas-You-Tube-Thumbnail-2.png"
+                alt="MOZAMMEL MCFB banner"
+                className="w-full h-auto object-cover"
+              />
             </div>
 
             {/* Promotional grid */}
