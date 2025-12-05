@@ -211,9 +211,14 @@ function App() {
       {/* Fixed Header Bar */}
       <div className="fixed top-0 left-0 right-0 z-40 flex justify-center">
         <div className="w-full max-w-md px-3">
-          <div className="text-center py-3 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-sm border-b border-slate-700 rounded-b-3xl">
-            <h1 className="text-xl font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-emerald-100 to-emerald-400 drop-shadow-sm">
-              MCFB
+          <div className="flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-sm border-b border-slate-700 rounded-b-3xl">
+            <img
+              src="/logo.svg"
+              alt="MOZAMMEL MCFB logo"
+              className="w-7 h-7 rounded-xl shadow-sm"
+            />
+            <h1 className="text-lg font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-emerald-100 to-emerald-400 drop-shadow-sm">
+              MOZAMMEL MCFB
             </h1>
           </div>
         </div>
@@ -246,7 +251,7 @@ function App() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-white font-semibold text-base">ZIKRUL ISLAM JUWEL</span>
+                    <span className="text-white font-semibold text-base">MOZAMMEL HAQUE</span>
                     <span className="bg-amber-400 text-emerald-900 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">VIP 2</span>
                   </div>
                   <div className="flex items-center gap-2 text-emerald-100 text-xs">
@@ -410,7 +415,7 @@ function App() {
             <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Team Challenge</h3>
               <div className="border border-emerald-100 rounded-xl p-4 text-center bg-white shadow-sm">
-                <div className="text-sm text-gray-500 mb-2">2024-05-12 11:30:00 PM</div>
+                <div className="text-sm text-gray-500 mb-2">2025-12-05 11:30:00 PM</div>
                 <div className="flex justify-around items-center my-3">
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">VB</div>
@@ -432,7 +437,7 @@ function App() {
             <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Team Challenge</h3>
               <div className="border border-emerald-100 rounded-xl p-4 text-center bg-white shadow-sm">
-                <div className="text-sm text-gray-500 mb-2">2024-05-13 3:45:00 PM</div>
+                <div className="text-sm text-gray-500 mb-2">2025-12-05 3:45:00 PM</div>
                 <div className="flex justify-around items-center my-3">
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">MC</div>
@@ -454,7 +459,7 @@ function App() {
             <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Team Challenge</h3>
               <div className="border border-emerald-100 rounded-xl p-4 text-center bg-white shadow-sm">
-                <div className="text-sm text-gray-500 mb-2">2024-05-14 7:20:00 PM</div>
+                <div className="text-sm text-gray-500 mb-2">2025-12-05 7:20:00 PM</div>
                 <div className="flex justify-around items-center my-3">
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">RM</div>
@@ -476,7 +481,7 @@ function App() {
             <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Team Challenge</h3>
               <div className="border border-emerald-100 rounded-xl p-4 text-center bg-white shadow-sm">
-                <div className="text-sm text-gray-500 mb-2">2024-05-15 1:15:00 PM</div>
+                <div className="text-sm text-gray-500 mb-2">2025-12-05 1:15:00 PM</div>
                 <div className="flex justify-around items-center my-3">
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold">PSG</div>
@@ -498,7 +503,7 @@ function App() {
             <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Team Challenge</h3>
               <div className="border border-emerald-100 rounded-xl p-4 text-center bg-white shadow-sm">
-                <div className="text-sm text-gray-500 mb-2">2024-05-16 9:30:00 PM</div>
+                <div className="text-sm text-gray-500 mb-2">2025-12-05 9:30:00 PM</div>
                 <div className="flex justify-around items-center my-3">
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center text-white font-bold">LIV</div>
@@ -520,7 +525,7 @@ function App() {
             <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Team Challenge</h3>
               <div className="border border-emerald-100 rounded-xl p-4 text-center bg-white shadow-sm">
-                <div className="text-sm text-gray-500 mb-2">2024-05-17 5:00:00 PM</div>
+                <div className="text-sm text-gray-500 mb-2">2025-12-05 5:00:00 PM</div>
                 <div className="flex justify-around items-center my-3">
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center text-white font-bold">ARS</div>
@@ -542,7 +547,7 @@ function App() {
             <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Team Challenge</h3>
               <div className="border border-emerald-100 rounded-xl p-4 text-center bg-white shadow-sm">
-                <div className="text-sm text-gray-500 mb-2">2024-05-18 8:45:00 PM</div>
+                <div className="text-sm text-gray-500 mb-2">2025-12-05 8:45:00 PM</div>
                 <div className="flex justify-around items-center my-3">
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-lime-500 rounded-full flex items-center justify-center text-white font-bold">DOR</div>
@@ -581,7 +586,7 @@ function App() {
               <div className="space-y-3">
                 {/* Match 1 */}
                 <div className="border border-gray-200 rounded-lg p-4 text-center">
-                  <div className="text-sm text-gray-500 mb-2">2024-05-19 7:00:00 PM</div>
+                  <div className="text-sm text-gray-500 mb-2">2025-12-05 7:00:00 PM</div>
                   <div className="flex justify-around items-center my-3">
                     <div className="flex flex-col items-center">
                       <div className="w-12 h-12 bg-indigo-700 rounded-full flex items-center justify-center text-white font-bold">JUV</div>
@@ -601,7 +606,7 @@ function App() {
 
                 {/* Match 2 */}
                 <div className="border border-gray-200 rounded-lg p-4 text-center">
-                  <div className="text-sm text-gray-500 mb-2">2024-05-20 9:00:00 PM</div>
+                  <div className="text-sm text-gray-500 mb-2">2025-12-05 9:00:00 PM</div>
                   <div className="flex justify-around items-center my-3">
                     <div className="flex flex-col items-center">
                       <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white font-bold">MUN</div>
@@ -631,7 +636,7 @@ function App() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Name:</span>
-                  <span className="text-gray-800 font-medium">ZIKRUL ISLAM JUWEL</span>
+                  <span className="text-gray-800 font-medium">MOZAMMEL HAQUE</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">VIP Level:</span>
