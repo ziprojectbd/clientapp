@@ -1,5 +1,5 @@
-import { Download, Gem, Gift, Trophy, Briefcase, Home, Activity, Target, Users, User, ChevronRight, Wifi, Battery, Signal } from 'lucide-react';
-import { useState } from 'react';
+import { Home, Activity, Target, Users, User } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 const glowStyles = `
   @keyframes glowPulse {
@@ -89,6 +89,13 @@ function App() {
   const [withdrawMethod, setWithdrawMethod] = useState<'bkash' | 'nagad' | 'usdt'>('bkash');
   const [withdrawWalletNumber, setWithdrawWalletNumber] = useState('');
   const [withdrawUsdtAddress, setWithdrawUsdtAddress] = useState('');
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const bannerImages = [
+    "https://i.ibb.co.com/pBz4m4SB/Green-Passive-Income-Ideas-You-Tube-Thumbnail-2.png",
+    "https://i.ibb.co.com/rKHyVgy9/Pngtree-a-data-analyst-sitting-at-15735858.jpg",
+    "https://i.ibb.co.com/wFX96Mxd/b2cf276d-5c26-47d7-9529-f56a7017cfb8.jpg"
+  ];
 
   const initialBalanceTk = 35772.6198;
   const [balanceTk, setBalanceTk] = useState(initialBalanceTk);
@@ -236,6 +243,19 @@ function App() {
     }
   };
 
+  // Auto-slide effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % bannerImages.length);
+    }, 4000); // Change slide every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [bannerImages.length]);
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
+
   return (
     <div
       className="min-h-screen pt-16 pb-4 bg-[#020617] bg-cover bg-center bg-no-repeat"
@@ -356,13 +376,51 @@ function App() {
         {/* Menu Items */}
         {activeTab === 'home' && (
           <div className="px-5 mt-6 space-y-5">
-            {/* Home Banner Image */}
-            <div className="rounded-3xl overflow-hidden shadow-md border border-emerald-500/40 custom-glow-card homecard-glow">
-              <img
-                src="https://i.ibb.co.com/pBz4m4SB/Green-Passive-Income-Ideas-You-Tube-Thumbnail-2.png"
-                alt="MOZAMMEL MCFB banner"
-                className="w-full h-auto object-cover"
-              />
+            {/* Home Banner Image Slider */}
+            <div className="relative w-full rounded-3xl overflow-hidden shadow-md border border-emerald-500/40 custom-glow-card homecard-glow">
+              <div className="relative w-full aspect-video sm:aspect-[16/9] md:aspect-[21/9] h-48 sm:h-64 md:h-80 lg:h-96">
+                {bannerImages.map((image, index) => (
+                  <div
+                    key={index}
+                    className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
+                      index === currentSlide ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  >
+                    <div className={`flex items-center justify-center h-full ${index === 2 ? 'gap-6' : ''}`}>
+                      {index === 2 && (
+                        <div className="text-center px-6 max-w-md">
+                          <h3 className="text-lg font-bold mb-2 text-shadow-lg italic bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-lime-500">"MCFB"</h3>
+                          <p className="text-xs md:text-sm font-bold opacity-90 leading-relaxed italic bg-clip-text text-transparent bg-gradient-to-r from-red-400 to-lime-400">
+                            "Experience the ultimate gaming platform with secure deposits, instant withdrawals, and exciting tournament"
+                          </p>
+                        </div>
+                      )}
+                      <img
+                        src={image}
+                        alt={`MOZAMMEL MCFB banner ${index + 1}`}
+                        className={`w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-300 ${
+                          index === 1 ? 'scale-90 hover:scale-100' : 
+                          index === 2 ? 'w-auto h-auto max-w-full max-h-full object-contain' : ''
+                        }`}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+                {bannerImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => goToSlide(index)}
+                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                      index === currentSlide
+                        ? 'bg-white w-6 sm:w-8'
+                        : 'bg-white/50 hover:bg-white/75'
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
             </div>
 
             {/* Promotional grid */}
@@ -1027,26 +1085,6 @@ function App() {
           <NavItem icon={<User size={24} />} label="My" active={activeTab === 'my'} onClick={() => setActiveTab('my')} />
         </div>
       </div>
-    </div>
-  );
-}
-
-interface MenuItemProps {
-  icon: React.ReactNode;
-  text: string;
-}
-
-function MenuItem(props: MenuItemProps) {
-  const { icon, text } = props;
-  return (
-    <div className="bg-gradient-to-r from-emerald-50 to-white rounded-2xl p-4 flex items-center justify-between shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-md transition-all custom-glow-card">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
-          {icon}
-        </div>
-        <span className="text-gray-800 font-medium">{text}</span>
-      </div>
-      <ChevronRight className="text-gray-400" size={20} />
     </div>
   );
 }
