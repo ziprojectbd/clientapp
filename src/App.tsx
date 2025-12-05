@@ -269,6 +269,7 @@ function App() {
         <div className="flex-1 overflow-y-auto">
 
         {/* Notice Marquee */}
+        {activeTab === 'home' && (
         <div className="px-5 pt-3">
           <div className="bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 rounded-full border border-amber-500/70 shadow-sm overflow-hidden">
             <div className="flex items-center gap-2 px-4 py-1.5 text-[11px] font-medium text-amber-950 whitespace-nowrap marquee-notice">
@@ -278,6 +279,7 @@ function App() {
             </div>
           </div>
         </div>
+        )}
 
         {/* Green Profile Section */}
         {activeTab !== 'home' && activeTab !== 'activity' && (
