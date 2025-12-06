@@ -1,4 +1,4 @@
-import { Home, Activity, Target, Users, User, LogOut } from 'lucide-react';
+import { Home, Activity, Target, Users, User, LogOut, MessageCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from './AuthProvider';
 
@@ -61,6 +61,25 @@ const glowStyles = `
 
   .header-glow {
     animation: headerGlow 4s ease-in-out infinite;
+  }
+
+  @keyframes headerBorderPulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(248, 113, 113, 0.5); /* red */
+      border-color: rgba(248, 113, 113, 0.95);
+    }
+    50% {
+      box-shadow: 0 0 20px 6px rgba(190, 242, 100, 0.95); /* lime */
+      border-color: rgba(190, 242, 100, 1);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(248, 113, 113, 0.5); /* red */
+      border-color: rgba(248, 113, 113, 0.95);
+    }
+  }
+
+  .header-border-pulse {
+    animation: headerBorderPulse 2.6s ease-in-out infinite;
   }
 
   @keyframes marqueeSlide {
@@ -289,12 +308,14 @@ function App() {
       {/* Fixed Header Bar */}
       <div className="fixed top-0 left-0 right-0 z-40 flex justify-center">
         <div className="w-full max-w-md px-3">
-          <div className="flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-sm border-b border-slate-700 rounded-b-3xl">
-            <img
-              src="https://i.ibb.co/wZ8gyZvH/vecteezy-illustration-of-golden-soccer-logo-or-label-8172791.jpg"
-              alt="MOZAMMEL MCFB logo"
-              className="w-7 h-7 rounded-xl shadow-sm"
-            />
+          <div className="flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-sm border-b border-red-500 rounded-b-3xl header-border-pulse">
+            <div className="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center shadow-sm shadow-red-800/60">
+              <img
+                src="https://i.ibb.co/wZ8gyZvH/vecteezy-illustration-of-golden-soccer-logo-or-label-8172791.jpg"
+                alt="MOZAMMEL MCFB logo"
+                className="w-7 h-7 rounded-full"
+              />
+            </div>
             <h1 className="text-xl font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-amber-300 via-yellow-300 to-orange-400 drop-shadow-lg transform hover:scale-105 transition-all duration-300">
               MOZAMMEL MCFB
             </h1>
@@ -319,19 +340,6 @@ function App() {
             </div>
           </div>
 
-          {/* Football Animation Video */}
-          <div className="rounded-2xl overflow-hidden shadow-lg border border-[#191970]">
-            <div style={{padding: "56.25% 0 0 0", position: "relative"}}>
-              <iframe 
-                src="https://player.vimeo.com/video/1144077594?badge=0&autopause=0&autoplay=1&loop=1&muted=1&player_id=0&app_id=58479" 
-                frameBorder="0" 
-                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
-                referrerPolicy="strict-origin-when-cross-origin" 
-                style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%"}} 
-                title="football animation">
-              </iframe>
-            </div>
-          </div>
         </div>
         )}
 
@@ -1553,6 +1561,18 @@ function App() {
           </div>
         </div>
       )}
+
+      {/* Floating Support Button (aligned with bottom nav) */}
+      <div className="fixed bottom-20 left-0 right-0 z-50 flex justify-end max-w-md mx-auto px-4 pointer-events-none">
+        <button
+          type="button"
+          onClick={() => window.open('https://t.me/demomcfbsupport', '_blank')}
+          className="pointer-events-auto w-12 h-12 rounded-full bg-emerald-500 hover:bg-emerald-600 shadow-xl shadow-emerald-900/60 flex items-center justify-center border-2 border-white/80"
+          aria-label="Support"
+        >
+          <MessageCircle className="w-6 h-6 text-white" />
+        </button>
+      </div>
 
       {/* Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto px-4 pb-3">
