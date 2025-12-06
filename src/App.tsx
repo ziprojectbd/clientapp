@@ -1,5 +1,6 @@
-import { Home, Activity, Target, Users, User } from 'lucide-react';
+import { Home, Activity, Target, Users, User, LogOut } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useAuth } from './AuthProvider';
 
 const glowStyles = `
   @keyframes glowPulse {
@@ -77,6 +78,7 @@ const glowStyles = `
 `;
 
 function App() {
+  const { logout } = useAuth();
   const [activeTab, setActiveTab] = useState('home');
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [depositAmount, setDepositAmount] = useState('');
@@ -87,9 +89,17 @@ function App() {
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [withdrawMethod, setWithdrawMethod] = useState<'bkash' | 'nagad' | 'usdt'>('bkash');
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [reviewData, setReviewData] = useState({
+    rating: 5,
+    name: '',
+    comment: ''
+  });
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   const [withdrawWalletNumber, setWithdrawWalletNumber] = useState('');
   const [withdrawUsdtAddress, setWithdrawUsdtAddress] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isUsdtCopied, setIsUsdtCopied] = useState(false);
 
   const bannerImages = [
     "https://i.ibb.co.com/pBz4m4SB/Green-Passive-Income-Ideas-You-Tube-Thumbnail-2.png",
@@ -243,6 +253,16 @@ function App() {
     }
   };
 
+  const handleCopyUsdtAddress = async () => {
+    try {
+      await navigator.clipboard.writeText(usdtBep20Address);
+      setIsUsdtCopied(true);
+      setTimeout(() => setIsUsdtCopied(false), 2000);
+    } catch (err) {
+      alert('Unable to copy address automatically. Please copy it manually.');
+    }
+  };
+
   // Auto-slide effect
   useEffect(() => {
     const interval = setInterval(() => {
@@ -258,7 +278,7 @@ function App() {
 
   return (
     <div
-      className="min-h-screen pt-16 pb-4 bg-[#020617] bg-cover bg-center bg-no-repeat"
+      className="min-h-screen pt-16 pb-4 bg-[#191970] bg-cover bg-center bg-no-repeat"
       style={{
         backgroundImage:
           "url('https://i.ibb.co.com/jvcsJnG9/33114809-rm251-mind-15-e.jpg')",
@@ -271,11 +291,11 @@ function App() {
         <div className="w-full max-w-md px-3">
           <div className="flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-sm border-b border-slate-700 rounded-b-3xl">
             <img
-              src="/logo.svg"
+              src="https://i.ibb.co/wZ8gyZvH/vecteezy-illustration-of-golden-soccer-logo-or-label-8172791.jpg"
               alt="MOZAMMEL MCFB logo"
               className="w-7 h-7 rounded-xl shadow-sm"
             />
-            <h1 className="text-lg font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 via-sky-300 to-pink-400 drop-shadow-sm header-glow">
+            <h1 className="text-xl font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-amber-300 via-yellow-300 to-orange-400 drop-shadow-lg transform hover:scale-105 transition-all duration-300">
               MOZAMMEL MCFB
             </h1>
           </div>
@@ -290,12 +310,26 @@ function App() {
 
         {/* Notice Marquee */}
         {activeTab === 'home' && (
-        <div className="px-5 pt-3">
+        <div className="px-5 pt-3 space-y-4">
           <div className="bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 rounded-full border border-amber-500/70 shadow-sm overflow-hidden">
             <div className="flex items-center gap-2 px-4 py-1.5 text-[11px] font-medium text-amber-950 whitespace-nowrap marquee-notice">
               <span className="uppercase tracking-wide text-[10px] bg-amber-600 text-amber-50 px-2 py-0.5 rounded-full">Notice</span>
               <span>Upcoming tournaments and match signals are demo only. Always check latest updates in the signal channel before placing real bets.</span>
               <span className="ml-6">Enjoy secure deposits with bKash, Nagad &amp; USDT · Withdraw fast · Play responsibly.</span>
+            </div>
+          </div>
+
+          {/* Football Animation Video */}
+          <div className="rounded-2xl overflow-hidden shadow-lg border border-[#191970]">
+            <div style={{padding: "56.25% 0 0 0", position: "relative"}}>
+              <iframe 
+                src="https://player.vimeo.com/video/1144077594?badge=0&autopause=0&autoplay=1&loop=1&muted=1&player_id=0&app_id=58479" 
+                frameBorder="0" 
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
+                referrerPolicy="strict-origin-when-cross-origin" 
+                style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%"}} 
+                title="football animation">
+              </iframe>
             </div>
           </div>
         </div>
@@ -349,8 +383,8 @@ function App() {
                 <div className="font-semibold text-sm text-white">+৳1,250.00</div>
               </div>
               <div className="bg-white/95 rounded-xl px-3 py-2 border border-emerald-100 shadow-sm">
-                <div className="opacity-80 mb-1 text-[11px] text-gray-700">Total Profit</div>
-                <div className="font-semibold text-sm text-gray-900">+৳12,540.00</div>
+                <div className="opacity-80 mb-1 text-[11px] text-black">Total Profit</div>
+                <div className="font-semibold text-sm text-black">+৳12,540.00</div>
               </div>
             </div>
 
@@ -425,10 +459,44 @@ function App() {
 
             {/* Promotional grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              <div className="bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl p-4 text-white shadow-sm custom-glow-card homecard-glow">
-                <div className="font-semibold mb-2">Download App</div>
-                <p className="text-xs text-blue-50 mb-3">Get faster access and real-time notifications.</p>
-                <span className="inline-block text-[11px] px-3 py-1 rounded-full bg-white/15 border border-white/20">Android & iOS</span>
+              <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl p-5 text-white shadow-xl custom-glow-card homecard-glow relative overflow-hidden">
+                {/* Animated background elements */}
+                <div className="absolute inset-0 opacity-20">
+                  <div className="absolute top-2 right-2 w-8 h-8 bg-white rounded-full animate-pulse"></div>
+                  <div className="absolute bottom-3 left-3 w-6 h-6 bg-white rounded-full animate-pulse animation-delay-150"></div>
+                  <div className="absolute top-8 left-8 w-4 h-4 bg-white rounded-full animate-pulse animation-delay-300"></div>
+                </div>
+                
+                {/* Download icon */}
+                <div className="flex items-center justify-center w-12 h-12 bg-white/20 rounded-2xl mb-3 backdrop-blur-sm border border-white/30">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                </div>
+                
+                <div className="font-bold text-lg mb-2 relative z-10">Download App</div>
+                <p className="text-sm text-white/90 mb-4 relative z-10 leading-relaxed">Get faster access and real-time notifications.</p>
+                
+                {/* Platform badges */}
+                <div className="flex gap-2 relative z-10">
+                  <span className="inline-flex items-center text-[10px] px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 font-medium">
+                    <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                    </svg>
+                    iOS
+                  </span>
+                  <span className="inline-flex items-center text-[10px] px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 font-medium">
+                    <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M3.609 1.814L13.792 12 3.61 22.186a1.014 1.014 0 0 1-.61-.92V2.734a1.014 1.014 0 0 1 .61-.92zm10.89 10.893l1.874 1.874-7.452 7.452a1.013 1.013 0 0 1-1.42 0l-3.87-3.87 6.868-6.868 3 3zm7.078 4.262l1.847 1.067a1.013 1.013 0 0 1 0 1.749l-1.848 1.067-2.621-2.621 2.622-2.622zm-8.976 8.976l-3.87-3.87a1.013 1.013 0 0 1 0-1.42l7.452-7.452 3.874 3.874-7.456 7.456a1.013 1.013 0 0 1-1.42 0z"/>
+                    </svg>
+                    Android
+                  </span>
+                </div>
+                
+                {/* Download button */}
+                <button className="w-full mt-4 bg-white text-purple-600 font-semibold py-2.5 rounded-xl hover:bg-white/90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 relative z-10">
+                  Download Now
+                </button>
               </div>
 
               <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl p-4 text-white shadow-sm custom-glow-card homecard-glow">
@@ -449,57 +517,293 @@ function App() {
                 <span className="inline-block text-[11px] px-3 py-1 rounded-full bg-white/15 border border-white/20">Contact us</span>
               </div>
             </div>
+
+            {/* Currently Using Stats */}
+            <div className="bg-gradient-to-r from-green-50 via-emerald-50 to-green-50 rounded-2xl p-4 shadow-sm border border-green-200 hover:shadow-green-300 hover:shadow-lg transition-all custom-glow-card">
+              <h3 className="text-lg font-semibold text-white800 mb-4 text-center">Currently Online</h3>
+              
+              <div className="text-center mb-4">
+                <div className="flex items-center justify-center mb-2">
+                  <div className="relative">
+                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                    <div className="absolute inset-0 w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
+                  </div>
+                  <span className="ml-2 text-sm text-green-600 font-medium">Live</span>
+                </div>
+                <div className="text-3xl font-bold text-white800 mb-1">2,847</div>
+                <div className="text-sm text-white600">Active Users Now</div>
+              </div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-3 gap-2 mb-4">
+                <div className="text-center p-2 bg-white rounded-lg border border-green-100">
+                  <div className="text-lg font-bold text-green-600">842</div>
+                  <div className="text-xs text-white600">Betting</div>
+                </div>
+                <div className="text-center p-2 bg-white rounded-lg border border-green-100">
+                  <div className="text-lg font-bold text-blue-600">1,293</div>
+                  <div className="text-xs text-white600">Watching</div>
+                </div>
+                <div className="text-center p-2 bg-white rounded-lg border border-green-100">
+                  <div className="text-lg font-bold text-purple-600">712</div>
+                  <div className="text-xs text-white600">Chatting</div>
+                </div>
+              </div>
+
+              {/* Activity Timeline */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-white600">Peak today:</span>
+                  <span className="font-semibold text-green-600">3,421 users</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-white600">Avg. online:</span>
+                  <span className="font-semibold text-white700">2,156 users</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-white600">Total members:</span>
+                  <span className="font-semibold text-white700">48,392</span>
+                </div>
+              </div>
+
+              {/* Live Activity Indicator */}
+              <div className="mt-4 p-2 bg-green-100 rounded-lg border border-green-200">
+                <div className="flex items-center gap-2">
+                  <div className="flex -space-x-2">
+                    <div className="w-6 h-6 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center text-white text-[8px] font-bold">A</div>
+                    <div className="w-6 h-6 bg-green-500 rounded-full border-2 border-white flex items-center justify-center text-white text-[8px] font-bold">B</div>
+                    <div className="w-6 h-6 bg-purple-500 rounded-full border-2 border-white flex items-center justify-center text-white text-[8px] font-bold">C</div>
+                    <div className="w-6 h-6 bg-orange-500 rounded-full border-2 border-white flex items-center justify-center text-white text-[8px] font-bold">D</div>
+                    <div className="w-6 h-6 bg-pink-500 rounded-full border-2 border-white flex items-center justify-center text-white text-[8px]">+12</div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-xs font-medium text-white700">Recent Activity</div>
+                    <div className="text-xs text-white500">Users joined in last 5 min</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* User Rating System */}
+            <div className="bg-gradient-to-r from-amber-50 via-white to-amber-50 rounded-2xl p-4 shadow-sm border border-amber-200 hover:shadow-amber-300 hover:shadow-lg transition-all custom-glow-card">
+              <h3 className="text-lg font-semibold text-white800 mb-4 text-center">User Ratings</h3>
+              
+              {/* Overall Rating */}
+              <div className="text-center mb-4">
+                <div className="flex items-center justify-center gap-1 mb-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <svg
+                      key={star}
+                      className={`w-6 h-6 ${star <= 4 ? "text-amber-400 fill-current" : "text-white300"}`}
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <div className="text-2xl font-bold text-white800">4.2</div>
+                <div className="text-sm text-white600">Based on 1,248 reviews</div>
+              </div>
+
+              {/* Rating Breakdown */}
+              <div className="space-y-2">
+                {[5, 4, 3, 2, 1].map((rating) => {
+                  const percentage = rating === 5 ? 65 : rating === 4 ? 20 : rating === 3 ? 10 : rating === 2 ? 3 : 2;
+                  return (
+                    <div key={rating} className="flex items-center gap-2">
+                      <span className="text-xs text-white600 w-8">{rating}</span>
+                      <svg className="w-3 h-3 text-amber-400 fill-current" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                      <div className="flex-1 bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-amber-400 h-2 rounded-full transition-all duration-500"
+                          style={{width: `${percentage}%`}}
+                        ></div>
+                      </div>
+                      <span className="text-xs text-white600 w-10 text-right">{percentage}%</span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* User Reviews */}
+              <div className="mt-4 space-y-3">
+                <div className="bg-white rounded-xl p-3 border border-gray-100">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">RJ</div>
+                    <div className="flex-1">
+                      <div className="font-medium text-sm text-white800">Rahul Johnson</div>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <svg
+                            key={star}
+                            className={`w-3 h-3 ${star <= 5 ? "text-amber-400 fill-current" : "text-white300"}`}
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+                    </div>
+                    <span className="text-xs text-white500">2 days ago</span>
+                  </div>
+                  <p className="text-xs text-white600">"Great platform! Fast withdrawals and excellent customer support."</p>
+                </div>
+
+                <div className="bg-white rounded-xl p-3 border border-gray-100">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-bold">SK</div>
+                    <div className="flex-1">
+                      <div className="font-medium text-sm text-white800">Sarah Khan</div>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <svg
+                            key={star}
+                            className={`w-3 h-3 ${star <= 4 ? "text-amber-400 fill-current" : "text-white300"}`}
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+                    </div>
+                    <span className="text-xs text-white500">1 week ago</span>
+                  </div>
+                  <p className="text-xs text-white600">"Love the match predictions! Very accurate and helpful."</p>
+                </div>
+              </div>
+
+              {/* Add Review Button */}
+              <button 
+                onClick={() => setIsReviewOpen(true)}
+                className="w-full mt-4 bg-amber-400 hover:bg-amber-500 text-white800 font-semibold py-2 rounded-xl transition-colors duration-200 text-sm"
+              >
+                Write a Review
+              </button>
+            </div>
           </div>
         )}
 
         {/* Activity Interface */}
         {activeTab === 'activity' && (
           <div className="px-5 mt-6 space-y-4">
-            <div className="bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-700 text-slate-50 custom-glow-card">
-              <h3 className="text-lg font-semibold mb-2">Recent Activity</h3>
-              <p className="text-xs text-slate-300 mb-3">Track your latest deposits, withdraws and tournament results.</p>
+            {/* Recent Activity Card */}
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border border-emerald-500/30 shadow-xl custom-glow-card">
+              {/* Decorative orbs */}
+              <div className="pointer-events-none absolute inset-0 opacity-20">
+                <div className="absolute -top-6 -right-4 w-24 h-24 bg-emerald-500 rounded-full blur-2xl" />
+                <div className="absolute bottom-0 -left-10 w-28 h-28 bg-cyan-500 rounded-full blur-3xl" />
+              </div>
 
-              <div className="space-y-2 text-xs">
-                <div className="flex items-center justify-between bg-slate-900/60 rounded-xl px-3 py-2">
-                  <div>
-                    <div className="font-semibold text-emerald-300">Deposit Successful</div>
-                    <div className="text-slate-400">+৳2,000 via bKash</div>
+              <div className="relative z-10 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-9 h-9 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center">
+                      <Activity className="w-5 h-5 text-emerald-300" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-semibold text-white">Recent Activity</h3>
+                      <p className="text-[11px] text-white/70">Track your latest deposits, withdraws and tournament results.</p>
+                    </div>
                   </div>
-                  <span className="text-[11px] text-slate-400">2 min ago</span>
+                  <span className="text-[11px] px-2 py-1 rounded-full bg-emerald-500/15 border border-emerald-400/40 text-emerald-200">Live feed</span>
                 </div>
 
-                <div className="flex items-center justify-between bg-slate-900/60 rounded-xl px-3 py-2">
-                  <div>
-                    <div className="font-semibold text-amber-300">Tournament Joined</div>
-                    <div className="text-slate-400">Football Challenge – JUV vs INT</div>
+                <div className="space-y-2 text-xs">
+                  {/* Item 1 */}
+                  <div className="flex items-center justify-between rounded-2xl px-3 py-2.5 bg-slate-900/70 border border-emerald-500/20">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-300 text-[11px] font-bold">DEP</div>
+                      <div>
+                        <div className="font-semibold text-emerald-200">Deposit Successful</div>
+                        <div className="text-[11px] text-white/70">+৳2,000 via bKash</div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="text-[11px] text-white/60">2 min ago</span>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/15 text-emerald-200 border border-emerald-400/40">Success</span>
+                    </div>
                   </div>
-                  <span className="text-[11px] text-slate-400">15 min ago</span>
-                </div>
 
-                <div className="flex items-center justify-between bg-slate-900/60 rounded-xl px-3 py-2">
-                  <div>
-                    <div className="font-semibold text-sky-300">Withdraw Requested</div>
-                    <div className="text-slate-400">৳1,500 to Nagad wallet</div>
+                  {/* Item 2 */}
+                  <div className="flex items-center justify-between rounded-2xl px-3 py-2.5 bg-slate-900/70 border border-amber-400/25">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-200 text-[11px] font-bold">TOUR</div>
+                      <div>
+                        <div className="font-semibold text-amber-200">Tournament Joined</div>
+                        <div className="text-[11px] text-white/70">Football Challenge – JUV vs INT</div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="text-[11px] text-white/60">15 min ago</span>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] bg-amber-500/15 text-amber-100 border border-amber-300/40">Ongoing</span>
+                    </div>
                   </div>
-                  <span className="text-[11px] text-slate-400">1 hour ago</span>
+
+                  {/* Item 3 */}
+                  <div className="flex items-center justify-between rounded-2xl px-3 py-2.5 bg-slate-900/70 border border-sky-400/25">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-full bg-sky-500/20 flex items-center justify-center text-sky-200 text-[11px] font-bold">WD</div>
+                      <div>
+                        <div className="font-semibold text-sky-200">Withdraw Requested</div>
+                        <div className="text-[11px] text-white/70">৳1,500 to Nagad wallet</div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="text-[11px] text-white/60">1 hour ago</span>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] bg-sky-500/15 text-sky-100 border border-sky-300/40">Pending</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-700 text-slate-50 custom-glow-card">
-              <h3 className="text-lg font-semibold mb-2">Statistics</h3>
-              <div className="grid grid-cols-3 gap-3 text-center text-xs">
-                <div>
-                  <div className="text-base font-bold text-emerald-300">12</div>
-                  <div className="text-slate-400">Matches</div>
+            {/* Statistics Card */}
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border border-cyan-400/30 shadow-xl custom-glow-card">
+              <div className="pointer-events-none absolute inset-0 opacity-10">
+                <div className="absolute -bottom-10 right-0 w-32 h-32 bg-cyan-400 rounded-full blur-3xl" />
+                <div className="absolute -top-8 left-4 w-20 h-20 bg-indigo-500 rounded-full blur-2xl" />
+              </div>
+
+              <div className="relative z-10 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-9 h-9 rounded-2xl bg-cyan-500/20 border border-cyan-300/40 flex items-center justify-center">
+                      <Target className="w-5 h-5 text-cyan-200" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-semibold text-white">Statistics</h3>
+                      <p className="text-[11px] text-white/70">Overview of your recent performance.</p>
+                    </div>
+                  </div>
+                  <span className="text-[11px] px-2 py-1 rounded-full bg-white/5 border border-white/15 text-white/80">Last 7 days</span>
                 </div>
-                <div>
-                  <div className="text-base font-bold text-amber-300">8</div>
-                  <div className="text-slate-400">Wins</div>
-                </div>
-                <div>
-                  <div className="text-base font-bold text-sky-300">৳4.2k</div>
-                  <div className="text-slate-400">Profit</div>
+
+                <div className="grid grid-cols-3 gap-3 text-center text-xs">
+                  <div className="rounded-2xl bg-white/5 border border-emerald-400/30 px-2.5 py-2">
+                    <div className="text-sm font-bold text-emerald-300">12</div>
+                    <div className="text-[11px] text-white/70 mb-1">Matches</div>
+                    <div className="h-1.5 w-full bg-emerald-900/60 rounded-full overflow-hidden">
+                      <div className="h-full w-4/5 bg-gradient-to-r from-emerald-400 to-emerald-200" />
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl bg-white/5 border border-amber-400/30 px-2.5 py-2">
+                    <div className="text-sm font-bold text-amber-300">8</div>
+                    <div className="text-[11px] text-white/70 mb-1">Wins</div>
+                    <div className="h-1.5 w-full bg-amber-900/60 rounded-full overflow-hidden">
+                      <div className="h-full w-3/4 bg-gradient-to-r from-amber-400 to-yellow-200" />
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl bg-white/5 border border-sky-400/30 px-2.5 py-2">
+                    <div className="text-sm font-bold text-sky-300">৳4.2k</div>
+                    <div className="text-[11px] text-white/70 mb-1">Profit</div>
+                    <div className="h-1.5 w-full bg-sky-900/60 rounded-full overflow-hidden">
+                      <div className="h-full w-2/3 bg-gradient-to-r from-sky-400 to-cyan-200" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -513,15 +817,15 @@ function App() {
 
             {/* Tournament 1 */}
             <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Team Challenge</h3>
+              <h3 className="text-lg font-semibold text-white800 mb-4">Team Challenge</h3>
               <div className="border border-emerald-100 rounded-xl p-4 text-center bg-white shadow-sm">
-                <div className="text-sm text-gray-500 mb-2">2025-12-05 11:30:00 PM</div>
+                <div className="text-sm text-white500 mb-2">2025-12-05 11:30:00 PM</div>
                 <div className="flex justify-around items-center my-3">
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">VB</div>
                     <span className="text-sm font-medium mt-1">Vfl Bochum</span>
                   </div>
-                  <span className="text-lg font-bold text-gray-600">VS</span>
+                  <span className="text-lg font-bold text-white600">VS</span>
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">BL</div>
                     <span className="text-sm font-medium mt-1">Bayer Leverkusen</span>
@@ -535,15 +839,15 @@ function App() {
 
             {/* Tournament 2 */}
             <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Team Challenge</h3>
+              <h3 className="text-lg font-semibold text-white800 mb-4">Team Challenge</h3>
               <div className="border border-emerald-100 rounded-xl p-4 text-center bg-white shadow-sm">
-                <div className="text-sm text-gray-500 mb-2">2025-12-05 3:45:00 PM</div>
+                <div className="text-sm text-white500 mb-2">2025-12-05 3:45:00 PM</div>
                 <div className="flex justify-around items-center my-3">
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">MC</div>
                     <span className="text-sm font-medium mt-1">Man City</span>
                   </div>
-                  <span className="text-lg font-bold text-gray-600">VS</span>
+                  <span className="text-lg font-bold text-white600">VS</span>
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">CHE</div>
                     <span className="text-sm font-medium mt-1">Chelsea</span>
@@ -557,15 +861,15 @@ function App() {
 
             {/* Tournament 3 */}
             <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Team Challenge</h3>
+              <h3 className="text-lg font-semibold text-white800 mb-4">Team Challenge</h3>
               <div className="border border-emerald-100 rounded-xl p-4 text-center bg-white shadow-sm">
-                <div className="text-sm text-gray-500 mb-2">2025-12-05 7:20:00 PM</div>
+                <div className="text-sm text-white500 mb-2">2025-12-05 7:20:00 PM</div>
                 <div className="flex justify-around items-center my-3">
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">RM</div>
                     <span className="text-sm font-medium mt-1">Real Madrid</span>
                   </div>
-                  <span className="text-lg font-bold text-gray-600">VS</span>
+                  <span className="text-lg font-bold text-white600">VS</span>
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">BAR</div>
                     <span className="text-sm font-medium mt-1">Barcelona</span>
@@ -579,15 +883,15 @@ function App() {
 
             {/* Tournament 4 */}
             <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Team Challenge</h3>
+              <h3 className="text-lg font-semibold text-white800 mb-4">Team Challenge</h3>
               <div className="border border-emerald-100 rounded-xl p-4 text-center bg-white shadow-sm">
-                <div className="text-sm text-gray-500 mb-2">2025-12-05 1:15:00 PM</div>
+                <div className="text-sm text-white500 mb-2">2025-12-05 1:15:00 PM</div>
                 <div className="flex justify-around items-center my-3">
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold">PSG</div>
                     <span className="text-sm font-medium mt-1">PSG</span>
                   </div>
-                  <span className="text-lg font-bold text-gray-600">VS</span>
+                  <span className="text-lg font-bold text-white600">VS</span>
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center text-white font-bold">LYO</div>
                     <span className="text-sm font-medium mt-1">Lyon</span>
@@ -601,15 +905,15 @@ function App() {
 
             {/* Tournament 5 */}
             <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Team Challenge</h3>
+              <h3 className="text-lg font-semibold text-white800 mb-4">Team Challenge</h3>
               <div className="border border-emerald-100 rounded-xl p-4 text-center bg-white shadow-sm">
-                <div className="text-sm text-gray-500 mb-2">2025-12-05 9:30:00 PM</div>
+                <div className="text-sm text-white500 mb-2">2025-12-05 9:30:00 PM</div>
                 <div className="flex justify-around items-center my-3">
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center text-white font-bold">LIV</div>
                     <span className="text-sm font-medium mt-1">Liverpool</span>
                   </div>
-                  <span className="text-lg font-bold text-gray-600">VS</span>
+                  <span className="text-lg font-bold text-white600">VS</span>
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-cyan-500 rounded-full flex items-center justify-center text-white font-bold">MUN</div>
                     <span className="text-sm font-medium mt-1">Man United</span>
@@ -623,21 +927,21 @@ function App() {
 
             {/* Tournament 6 */}
             <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Team Challenge</h3>
+              <h3 className="text-lg font-semibold text-white800 mb-4">Team Challenge</h3>
               <div className="border border-emerald-100 rounded-xl p-4 text-center bg-white shadow-sm">
-                <div className="text-sm text-gray-500 mb-2">2025-12-05 5:00:00 PM</div>
+                <div className="text-sm text-white500 mb-2">2025-12-05 5:00:00 PM</div>
                 <div className="flex justify-around items-center my-3">
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center text-white font-bold">ARS</div>
                     <span className="text-sm font-medium mt-1">Arsenal</span>
                   </div>
-                  <span className="text-lg font-bold text-gray-600">VS</span>
+                  <span className="text-lg font-bold text-white600">VS</span>
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-red-700 rounded-full flex items-center justify-center text-white font-bold">TOT</div>
                     <span className="text-sm font-medium mt-1">Tottenham</span>
                   </div>
                 </div>
-                <div className="bg-gray-100 text-gray-800 text-xs px-3 py-1 rounded-full inline-block">
+                <div className="bg-gray-100 text-white800 text-xs px-3 py-1 rounded-full inline-block">
                   deadline: 10:00:00
                 </div>
               </div>
@@ -645,15 +949,15 @@ function App() {
 
             {/* Tournament 7 */}
             <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Team Challenge</h3>
+              <h3 className="text-lg font-semibold text-white800 mb-4">Team Challenge</h3>
               <div className="border border-emerald-100 rounded-xl p-4 text-center bg-white shadow-sm">
-                <div className="text-sm text-gray-500 mb-2">2025-12-05 8:45:00 PM</div>
+                <div className="text-sm text-white500 mb-2">2025-12-05 8:45:00 PM</div>
                 <div className="flex justify-around items-center my-3">
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-lime-500 rounded-full flex items-center justify-center text-white font-bold">DOR</div>
                     <span className="text-sm font-medium mt-1">Dortmund</span>
                   </div>
-                  <span className="text-lg font-bold text-gray-600">VS</span>
+                  <span className="text-lg font-bold text-white600">VS</span>
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 bg-blue-800 rounded-full flex items-center justify-center text-white font-bold">BAY</div>
                     <span className="text-sm font-medium mt-1">Bayern</span>
@@ -673,7 +977,7 @@ function App() {
             {/* Match Betting Cards */}
             <div className="bg-gradient-to-br from-white via-emerald-50 to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-800">Upcoming Matches</h3>
+                <h3 className="text-lg font-semibold text-white800">Upcoming Matches</h3>
                 <a
                   href="https://t.me/demomcfbsignal"
                   target="_blank"
@@ -686,13 +990,13 @@ function App() {
               <div className="space-y-3">
                 {/* Match 1 */}
                 <div className="border border-gray-200 rounded-lg p-4 text-center">
-                  <div className="text-sm text-gray-500 mb-2">2025-12-05 7:00:00 PM</div>
+                  <div className="text-sm text-white500 mb-2">2025-12-05 7:00:00 PM</div>
                   <div className="flex justify-around items-center my-3">
                     <div className="flex flex-col items-center">
                       <div className="w-12 h-12 bg-indigo-700 rounded-full flex items-center justify-center text-white font-bold">JUV</div>
                       <span className="text-sm font-medium mt-1">Juventus</span>
                     </div>
-                    <span className="text-lg font-bold text-gray-600">VS</span>
+                    <span className="text-lg font-bold text-white600">VS</span>
                     <div className="flex flex-col items-center">
                       <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white font-bold">INT</div>
                       <span className="text-sm font-medium mt-1">Inter Milan</span>
@@ -706,13 +1010,13 @@ function App() {
 
                 {/* Match 2 */}
                 <div className="border border-gray-200 rounded-lg p-4 text-center">
-                  <div className="text-sm text-gray-500 mb-2">2025-12-05 9:00:00 PM</div>
+                  <div className="text-sm text-white500 mb-2">2025-12-05 9:00:00 PM</div>
                   <div className="flex justify-around items-center my-3">
                     <div className="flex flex-col items-center">
                       <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white font-bold">MUN</div>
                       <span className="text-sm font-medium mt-1">Man Utd</span>
                     </div>
-                    <span className="text-lg font-bold text-gray-600">VS</span>
+                    <span className="text-lg font-bold text-white600">VS</span>
                     <div className="flex flex-col items-center">
                       <div className="w-12 h-12 bg-blue-700 rounded-full flex items-center justify-center text-white font-bold">CHE</div>
                       <span className="text-sm font-medium mt-1">Chelsea</span>
@@ -732,40 +1036,52 @@ function App() {
         {activeTab === 'my' && (
           <div className="px-5 mt-6 space-y-4 pb-4">
             <div className="bg-gradient-to-r from-emerald-50 via-white to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">My Profile</h3>
+              <h3 className="text-lg font-semibold text-white800 mb-4">My Profile</h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Name:</span>
-                  <span className="text-gray-800 font-medium">MOZAMMEL HAQUE</span>
+                  <span className="text-white600">Name:</span>
+                  <span className="text-white800 font-medium">MOZAMMEL HAQUE</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">VIP Level:</span>
+                  <span className="text-white600">VIP Level:</span>
                   <span className="bg-amber-400 text-emerald-800 text-xs font-bold px-2 py-1 rounded">VIP 2</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">UID:</span>
-                  <span className="text-gray-800 font-medium">123456789</span>
+                  <span className="text-white600">UID:</span>
+                  <span className="text-white800 font-medium">123456789</span>
                 </div>
               </div>
             </div>
             
             <div className="bg-gradient-to-r from-white via-emerald-50 to-emerald-100 rounded-2xl p-4 shadow-sm border border-emerald-100 hover:shadow-emerald-300 hover:shadow-lg transition-all custom-glow-card">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Account Settings</h3>
+              <h3 className="text-lg font-semibold text-white800 mb-4">Account Settings</h3>
               <div className="space-y-3">
                 <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-                  <span className="text-gray-700">Edit Profile</span>
+                  <span className="text-white700">Edit Profile</span>
                 </button>
                 <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-                  <span className="text-gray-700">Change Password</span>
+                  <span className="text-white700">Change Password</span>
                 </button>
                 <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-                  <span className="text-gray-700">Notification Settings</span>
+                  <span className="text-white700">Notification Settings</span>
                 </button>
                 <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-                  <span className="text-gray-700">Privacy Settings</span>
+                  <span className="text-white700">Privacy Settings</span>
                 </button>
               </div>
             </div>
+
+            {/* Logout Button */}
+            <button
+              onClick={async () => {
+                await logout();
+                // The AppWrapper will automatically redirect to login page
+              }}
+              className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-2xl shadow-lg shadow-red-900/40 transition-all duration-200 flex items-center justify-center gap-2"
+            >
+              <LogOut className="w-5 h-5" />
+              Logout
+            </button>
           </div>
         )}
         {/* Spacer for bottom nav */}
@@ -776,53 +1092,83 @@ function App() {
 
       {/* Deposit Modal */}
       {isDepositOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="w-full max-w-sm mx-4 bg-white rounded-2xl shadow-2xl border border-emerald-100 p-5">
-            <h2 className="text-lg font-semibold text-gray-800 mb-3 text-center">Deposit Funds</h2>
-            <p className="text-xs text-gray-500 mb-4 text-center">Choose a payment method and enter the amount you want to deposit into your MCFB account.</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-sm mx-4 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 rounded-3xl shadow-2xl border border-blue-500/30 p-6 relative overflow-hidden">
+            {/* Animated background elements */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-4 right-4 w-20 h-20 bg-blue-400 rounded-full animate-pulse"></div>
+              <div className="absolute bottom-6 left-6 w-16 h-16 bg-emerald-400 rounded-full animate-pulse animation-delay-150"></div>
+              <div className="absolute top-12 left-12 w-12 h-12 bg-purple-400 rounded-full animate-pulse animation-delay-300"></div>
+            </div>
+            
+            <div className="relative z-10">
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-400 to-blue-500 rounded-2xl mb-3 shadow-lg">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h2 className="text-xl font-bold text-white mb-2 bg-clip-text text-transparent bg-gradient-to-r from-emerald-300 to-blue-300">Deposit Funds</h2>
+                <p className="text-xs text-blue-200 text-center leading-relaxed">Choose a payment method and enter the amount you want to deposit into your MCFB account.</p>
+              </div>
 
             {/* Payment Methods */}
-            <div className="flex gap-2 mb-4 text-xs font-medium">
+            <div className="flex gap-2 mb-6">
               <button
                 type="button"
                 onClick={() => setPaymentMethod('bkash')}
-                className={`flex-1 px-3 py-2 rounded-xl border transition-colors ${
+                className={`flex-1 px-4 py-3 rounded-2xl border-2 transition-all duration-300 transform hover:scale-105 ${
                   paymentMethod === 'bkash'
-                    ? 'bg-pink-500 text-white border-pink-500'
-                    : 'bg-pink-50 text-pink-700 border-pink-200 hover:bg-pink-100'
+                    ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white border-pink-400 shadow-lg shadow-pink-500/30'
+                    : 'bg-white/10 text-pink-200 border-pink-500/30 hover:bg-white/20 hover:border-pink-500/60'
                 }`}
                 disabled={isDepositing}
               >
-                bKash
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-6 h-6 bg-pink-400 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">b</span>
+                  </div>
+                  <span className="text-xs font-semibold">bKash</span>
+                </div>
               </button>
               <button
                 type="button"
                 onClick={() => setPaymentMethod('nagad')}
-                className={`flex-1 px-3 py-2 rounded-xl border transition-colors ${
+                className={`flex-1 px-4 py-3 rounded-2xl border-2 transition-all duration-300 transform hover:scale-105 ${
                   paymentMethod === 'nagad'
-                    ? 'bg-amber-500 text-white border-amber-500'
-                    : 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100'
+                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white border-amber-400 shadow-lg shadow-amber-500/30'
+                    : 'bg-white/10 text-amber-200 border-amber-500/30 hover:bg-white/20 hover:border-amber-500/60'
                 }`}
                 disabled={isDepositing}
               >
-                Nagad
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-6 h-6 bg-amber-400 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">N</span>
+                  </div>
+                  <span className="text-xs font-semibold">Nagad</span>
+                </div>
               </button>
               <button
                 type="button"
                 onClick={() => setPaymentMethod('usdt')}
-                className={`flex-1 px-3 py-2 rounded-xl border transition-colors ${
+                className={`flex-1 px-4 py-3 rounded-2xl border-2 transition-all duration-300 transform hover:scale-105 ${
                   paymentMethod === 'usdt'
-                    ? 'bg-slate-900 text-white border-slate-900'
-                    : 'bg-slate-50 text-slate-800 border-slate-200 hover:bg-slate-100'
+                    ? 'bg-gradient-to-r from-slate-700 to-slate-800 text-white border-slate-500 shadow-lg shadow-slate-500/30'
+                    : 'bg-white/10 text-white300 border-slate-500/30 hover:bg-white/20 hover:border-slate-500/60'
                 }`}
                 disabled={isDepositing}
               >
-                USDT
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-6 h-6 bg-slate-400 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">U</span>
+                  </div>
+                  <span className="text-xs font-semibold">USDT</span>
+                </div>
               </button>
             </div>
 
             <div className="mb-3">
-              <label className="block text-xs font-medium text-gray-600 mb-1">Amount (৳)</label>
+              <label className="block text-xs font-medium text-white mb-1">Amount (৳)</label>
               <input
                 type="number"
                 min="0"
@@ -835,9 +1181,13 @@ function App() {
               />
             </div>
 
+            <div className="mb-1 text-[11px] text-white/80 font-semibold">
+              Payment method
+            </div>
+
             {/* Method-specific info */}
             {(paymentMethod === 'bkash' || paymentMethod === 'nagad') && (
-              <div className="mb-3 text-xs text-gray-600 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2">
+              <div className="mb-3 text-xs text-white600 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2">
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-medium">Cash out to</span>
                   <span className="font-semibold text-emerald-700">
@@ -851,13 +1201,39 @@ function App() {
             )}
 
             {paymentMethod === 'usdt' && (
-              <div className="mb-3 text-xs text-gray-600 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
-                <div className="flex items-center justify-between mb-1">
+              <div className="mb-3 text-xs text-white600 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+                <div className="flex items-center justify-between mb-2">
                   <span className="font-medium">BEP20 USDT Address</span>
+                  <button
+                    type="button"
+                    onClick={handleCopyUsdtAddress}
+                    className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] border transition-colors ${
+                      isUsdtCopied
+                        ? 'bg-emerald-500 text-white border-emerald-500'
+                        : 'bg-emerald-500/10 text-emerald-700 border-emerald-400/60 hover:bg-emerald-500/20'
+                    }`}
+                  >
+                    <span className="inline-block w-3 h-3 border border-emerald-600 bg-white" />
+                    <span>{isUsdtCopied ? 'Copied' : 'Copy'}</span>
+                  </button>
                 </div>
-                <div className="text-[11px] break-all font-mono text-slate-800 mb-1">
+                <div className="text-[11px] break-all font-mono text-white800 mb-2">
                   {usdtBep20Address}
                 </div>
+
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-16 h-16 bg-white rounded-md flex items-center justify-center overflow-hidden border border-slate-200">
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(usdtBep20Address)}`}
+                      alt="USDT BEP20 QR Code"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <p className="text-[10px] leading-snug text-slate-700">
+                    Scan this QR with your wallet to send USDT via BEP20 network.
+                  </p>
+                </div>
+
                 <p className="text-[11px] leading-snug">
                   Only send USDT via BEP20 network to this address. Wrong network deposits may be lost.
                 </p>
@@ -866,7 +1242,7 @@ function App() {
 
             {(paymentMethod === 'bkash' || paymentMethod === 'nagad') && (
               <div className="mb-3">
-                <label className="block text-xs font-medium text-gray-600 mb-1">Txn ID for verification</label>
+                <label className="block text-xs font-bold text-white mb-1">Txn ID for verification</label>
                 <input
                   type="text"
                   value={txnId}
@@ -878,15 +1254,15 @@ function App() {
               </div>
             )}
 
-            <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
-              <span>Available balance</span>
+            <div className="flex items-center justify-between text-xs text-white500 mb-1">
+              <span className="font-bold text-white">Available balance</span>
               <span className="font-semibold text-emerald-600">৳{balanceTk.toFixed ? balanceTk.toFixed(2) : balanceTk}</span>
             </div>
 
             {paymentMethod === 'usdt' && (
-              <div className="flex items-center justify-between text-[11px] text-gray-500 mb-4">
+              <div className="flex items-center justify-between text-[11px] text-yellow-300 mb-4">
                 <span>Approx. balance in USDT</span>
-                <span className="font-semibold text-slate-700">
+                <span className="font-semibold text-yellow-200">
                   ≈ {(balanceTk * usdtRate).toFixed(2)} USDT
                 </span>
               </div>
@@ -895,7 +1271,7 @@ function App() {
             <div className="flex gap-3 mt-2">
               <button
                 onClick={closeDepositModal}
-                className="flex-1 border border-gray-200 text-gray-700 text-sm font-medium py-2 rounded-xl hover:bg-gray-50 disabled:opacity-60"
+                className="flex-1 border border-gray-200 text-yellow-300 text-sm font-medium py-2 rounded-xl hover:bg-gray-50 disabled:opacity-60"
                 disabled={isDepositing}
               >
                 Cancel
@@ -915,6 +1291,7 @@ function App() {
                 )}
               </button>
             </div>
+            </div>
           </div>
         </div>
       )}
@@ -922,9 +1299,9 @@ function App() {
       {/* Withdraw Modal */}
       {isWithdrawOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="w-full max-w-sm mx-4 bg-white rounded-2xl shadow-2xl border border-emerald-100 p-5">
-            <h2 className="text-lg font-semibold text-gray-800 mb-3 text-center">Withdraw Funds</h2>
-            <p className="text-xs text-gray-500 mb-4 text-center">Select a payout method and enter the amount you want to withdraw from your MCFB account.</p>
+          <div className="w-full max-w-sm mx-4 bg-[#191970] rounded-2xl shadow-2xl border border-blue-800 p-5">
+            <h2 className="text-lg font-bold text-white mb-3 text-center">Withdraw Funds</h2>
+            <p className="text-xs text-yellow-100 mb-4 text-center">Select a payout method and enter the amount you want to withdraw from your MCFB account.</p>
 
             {/* Payment Methods */}
             <div className="flex gap-2 mb-4 text-xs font-medium">
@@ -958,7 +1335,7 @@ function App() {
                 className={`flex-1 px-3 py-2 rounded-xl border transition-colors ${
                   withdrawMethod === 'usdt'
                     ? 'bg-slate-900 text-white border-slate-900'
-                    : 'bg-slate-50 text-slate-800 border-slate-200 hover:bg-slate-100'
+                    : 'bg-slate-50 text-white800 border-slate-200 hover:bg-slate-100'
                 }`}
                 disabled={isWithdrawing}
               >
@@ -967,7 +1344,7 @@ function App() {
             </div>
 
             <div className="mb-3">
-              <label className="block text-xs font-medium text-gray-600 mb-1">Amount (৳)</label>
+              <label className="block text-xs font-medium text-white mb-1">Amount (৳)</label>
               <input
                 type="number"
                 min="0"
@@ -983,7 +1360,7 @@ function App() {
             {/* Method-specific info */}
             {(withdrawMethod === 'bkash' || withdrawMethod === 'nagad') && (
               <>
-                <div className="mb-3 text-xs text-gray-600 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2">
+                <div className="mb-3 text-xs text-white600 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2">
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-medium">Payout provider</span>
                     <span className="font-semibold text-emerald-700">
@@ -996,7 +1373,7 @@ function App() {
                 </div>
 
                 <div className="mb-3">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Your wallet number</label>
+                  <label className="block text-xs font-medium text-white mb-1">Your wallet number</label>
                   <input
                     type="tel"
                     value={withdrawWalletNumber}
@@ -1011,7 +1388,7 @@ function App() {
 
             {withdrawMethod === 'usdt' && (
               <>
-                <div className="mb-3 text-xs text-gray-600 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+                <div className="mb-3 text-xs text-white600 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-medium">Your BEP20 USDT Address</span>
                   </div>
@@ -1021,7 +1398,7 @@ function App() {
                 </div>
 
                 <div className="mb-3">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">BEP20 address</label>
+                  <label className="block text-xs font-medium text-white mb-1">BEP20 address</label>
                   <input
                     type="text"
                     value={withdrawUsdtAddress}
@@ -1034,15 +1411,15 @@ function App() {
               </>
             )}
 
-            <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
+            <div className="flex items-center justify-between text-xs text-white mb-1">
               <span>Current balance</span>
-              <span className="font-semibold text-emerald-600">৳{balanceTk.toFixed ? balanceTk.toFixed(2) : balanceTk}</span>
+              <span className="font-semibold text-white">৳{balanceTk.toFixed ? balanceTk.toFixed(2) : balanceTk}</span>
             </div>
 
             {withdrawMethod === 'usdt' && (
-              <div className="flex items-center justify-between text-[11px] text-gray-500 mb-4">
+              <div className="flex items-center justify-between text-[11px] text-yellow-300 mb-4">
                 <span>Approx. withdraw in USDT</span>
-                <span className="font-semibold text-slate-700">
+                <span className="font-semibold text-yellow-200">
                   {withdrawAmount ? `≈ ${(Number(withdrawAmount) * usdtRate).toFixed(2)} USDT` : '—'}
                 </span>
               </div>
@@ -1051,7 +1428,7 @@ function App() {
             <div className="flex gap-3 mt-2">
               <button
                 onClick={closeWithdrawModal}
-                className="flex-1 border border-gray-200 text-gray-700 text-sm font-medium py-2 rounded-xl hover:bg-gray-50 disabled:opacity-60"
+                className="flex-1 border border-gray-200 text-yellow-300 text-sm font-medium py-2 rounded-xl hover:bg-gray-50 disabled:opacity-60"
                 disabled={isWithdrawing}
               >
                 Cancel
@@ -1068,6 +1445,108 @@ function App() {
                   </>
                 ) : (
                   <span>Confirm Withdraw</span>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Review Modal */}
+      {isReviewOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="w-full max-w-sm mx-4 bg-[#191970] rounded-2xl shadow-2xl border border-blue-800 p-5">
+            <h2 className="text-lg font-bold text-white mb-3 text-center">Write a Review</h2>
+            <p className="text-xs text-yellow-100 mb-4 text-center">Share your experience with MOZAMMEL MCFB</p>
+
+            {/* Star Rating */}
+            <div className="mb-4">
+              <label className="block text-yellow-200 text-sm font-medium mb-2">Your Rating</label>
+              <div className="flex justify-center gap-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => setReviewData(prev => ({ ...prev, rating: star }))}
+                    className="transition-transform hover:scale-110"
+                  >
+                    <svg
+                      className={`w-8 h-8 ${star <= reviewData.rating ? "text-amber-400 fill-current" : "text-white400"}`}
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Name Input */}
+            <div className="mb-4">
+              <label className="block text-yellow-200 text-sm font-medium mb-2">Your Name</label>
+              <input
+                type="text"
+                value={reviewData.name}
+                onChange={(e) => setReviewData(prev => ({ ...prev, name: e.target.value }))}
+                className="w-full px-3 py-2 bg-blue-900/50 border border-blue-700 rounded-xl text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent"
+                placeholder="Enter your name"
+              />
+            </div>
+
+            {/* Comment Input */}
+            <div className="mb-4">
+              <label className="block text-yellow-200 text-sm font-medium mb-2">Your Review</label>
+              <textarea
+                value={reviewData.comment}
+                onChange={(e) => setReviewData(prev => ({ ...prev, comment: e.target.value }))}
+                className="w-full px-3 py-2 bg-blue-900/50 border border-blue-700 rounded-xl text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent resize-none"
+                rows={4}
+                placeholder="Share your experience..."
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3">
+              <button
+                onClick={() => setIsReviewOpen(false)}
+                className="flex-1 border border-blue-600 text-blue-200 text-sm font-medium py-2 rounded-xl hover:bg-blue-800/50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  if (!reviewData.name.trim() || !reviewData.comment.trim()) {
+                    alert('Please fill in all fields');
+                    return;
+                  }
+
+                  setIsSubmittingReview(true);
+                  try {
+                    // Simulate API call
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    
+                    // Show success message
+                    alert('Thank you for your review! It will be published after moderation.');
+                    
+                    // Reset form and close modal
+                    setReviewData({ rating: 5, name: '', comment: '' });
+                    setIsReviewOpen(false);
+                  } catch (error) {
+                    alert('Failed to submit review. Please try again.');
+                  } finally {
+                    setIsSubmittingReview(false);
+                  }
+                }}
+                disabled={isSubmittingReview}
+                className="flex-1 bg-amber-400 hover:bg-amber-500 text-white800 font-semibold py-2 rounded-xl transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isSubmittingReview ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-gray-800 border-t-transparent rounded-full animate-spin"></div>
+                    Submitting...
+                  </>
+                ) : (
+                  'Submit Review'
                 )}
               </button>
             </div>
@@ -1100,10 +1579,10 @@ function NavItem(props: NavItemProps) {
   const { icon, label, active, onClick } = props;
   return (
     <button onClick={onClick} className="flex flex-col items-center gap-1 min-w-[60px] hover:opacity-80 transition-opacity">
-      <div className={active ? "text-emerald-600" : "text-gray-400"}>
+      <div className={active ? "text-purple-600" : "text-amber-500"}>
         {icon}
       </div>
-      <span className={`text-xs ${active ? "text-emerald-600 font-semibold" : "text-gray-400"}`}>{label}</span>
+      <span className={`text-xs ${active ? "text-red-600 font-semibold" : "text-amber-500"}`}>{label}</span>
     </button>
   );
 }
